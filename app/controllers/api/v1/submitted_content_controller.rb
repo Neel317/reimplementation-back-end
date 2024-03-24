@@ -32,5 +32,19 @@ class Api::V1::SubmittedContentController < ApplicationController
       # @can_submit is the flag indicating if the user can submit or not in current stage
       @can_submit = !params.key?(:view)
       stage = assignment.current_stage(SignedUpTeam.topic_id(@participant.parent_id, @participant.user_id))
-  end
+    end
+
+    # view is called when @assignment.submission_allowed(topic_id) is false
+    # so @can_submit should be false
+    def view
+      @participant = AssignmentParticipant.find(params[:id])
+      return unless current_user_id?(@participant.user_id)
+
+      @assignment = @participant.assignment
+      # @can_submit is the flag indicating if the user can submit or not in current stage
+      @can_submit = false
+      @stage = @assignment.current_stage(SignedUpTeam.topic_id(@participant.parent_id, @participant.user_id))
+      redirect_to action: 'edit', id: params[:id], view: true
+    end
+
 end  
