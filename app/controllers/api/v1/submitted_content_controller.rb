@@ -22,16 +22,7 @@ class Api::V1::SubmittedContentController < ApplicationController
     end
   end
 
-  def update
-    @submission_record = SubmissionRecord.find(params[:id])
-    if @submission_record.update(submitted_content_params)
-      render json: @submission_record, status: :ok
-    else
-      render json: @submission_record.errors, status: :unprocessable_entity
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    render json: { error: e.message }, status: :not_found
-  end
+
 
 
   private
