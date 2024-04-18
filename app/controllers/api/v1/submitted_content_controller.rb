@@ -21,7 +21,10 @@ class Api::V1::SubmittedContentController < ApplicationController
       render json: @submission_record.errors, status: :unprocessable_entity
     end
   end
-  
+
+
+
+
   private
   
   def submitted_content_params
