@@ -33,6 +33,14 @@ class Api::V1::SubmittedContentController < ApplicationController
     render json: { error: e.message }, status: :not_found
   end
 
+  def destroy
+    @submission_record = SubmissionRecord.find(params[:id])
+    @submission_record.destroy
+    render json: { message: 'Record successfully deleted' }, status: :ok
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { error: e.message }, status: :not_found
+  end
+
 
 
 
