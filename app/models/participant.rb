@@ -10,4 +10,6 @@ class Participant < ApplicationRecord
   def fullname
     user.full_name
   end
+  validates :grade, numericality: { allow_nil: true }
+
 end

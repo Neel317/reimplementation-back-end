@@ -1,12 +1,3 @@
-require 'uri'
-require 'yaml'
-# Code Review: Notice that Participant overloads two different concepts:
-#              contribution and participant (see fields of the participant table).
-#              Consider creating a new table called contributions.
-#
-# Alias methods exist in this class which append 'get_' to many method names. Use
-# the idiomatic ruby method names (without get_)
-
 class AssignmentParticipant < Participant
   belongs_to  :assignment, class_name: 'Assignment', foreign_key: 'assignment_id'
   has_many    :review_mappings, class_name: 'ReviewResponseMap', foreign_key: 'reviewee_id'
@@ -28,4 +19,5 @@ class AssignmentParticipant < Participant
   def path
     "#{assignment.path}/#{team.directory_num}"
   end
+  validates :handle, presence: true
 end
