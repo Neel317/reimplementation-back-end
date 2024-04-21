@@ -4,10 +4,16 @@ class User < ApplicationRecord
 
   # name must be lowercase and unique
   validates :name, presence: true, uniqueness: true, allow_blank: false,
-                   format: { with: /\A[a-z]+\z/, message: 'must be in lowercase' }
+            format: { with: /\A[a-z]+\z/, message: 'must be in lowercase' }
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 6 }, presence: true, allow_nil: true
   validates :full_name, presence: true, length: { maximum: 50 }
+
+  has_many :participants, class_name: 'Participant', foreign_key: 'user_id', dependent: :destroy
+  has_many :assignment_participants, class_name: 'AssignmentParticipant', foreign_key: 'user_id', dependent: :destroy
+  has_many :assignments, through: :participants
+  has_many :teams_users, dependent: :destroy
+  has_many :teams, through: :teams_users
 
   belongs_to :role
   belongs_to :institution, optional: true
@@ -90,11 +96,11 @@ class User < ApplicationRecord
                           only: %i[id name email full_name email_on_review email_on_submission
                                    email_on_review_of_review],
                           include:
-                          {
-                            role: { only: %i[id name] },
-                            parent: { only: %i[id name] },
-                            institution: { only: %i[id name] }
-                          }
+                            {
+                              role: { only: %i[id name] },
+                              parent: { only: %i[id name] },
+                              institution: { only: %i[id name] }
+                            }
                         })).tap do |hash|
       hash['parent'] ||= { id: nil, name: nil }
       hash['institution'] ||= { id: nil, name: nil }
